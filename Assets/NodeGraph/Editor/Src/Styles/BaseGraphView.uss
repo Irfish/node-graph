@@ -1,0 +1,4 @@
+#graphRootView
+{
+    background-color: rgba(40,40,40,0.1);
+}

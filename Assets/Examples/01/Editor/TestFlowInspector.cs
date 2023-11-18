@@ -1,0 +1,41 @@
+using NodeGraph.Editor;
+using UnityEditor;
+using UnityEngine;
+
+namespace Example01.Editor
+{
+    [CustomEditor(typeof(TestFlow))]
+    public class TestFlowInspector : UnityEditor.Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            var testFlow = serializedObject.targetObject as TestFlow;
+            if (testFlow != null)
+            {
+                if (GUILayout.Button("Start"))
+                {
+                    testFlow.StartFlow();
+                }
+
+                if (GUILayout.Button("open graph"))
+                {
+                    var graph = testFlow.m_graph;
+                    if (graph != null)
+                    {
+                        DefaultGraphWindow.OpenWithGraph(graph);
+                    }
+                    else
+                    {
+                        Debug.LogError("flow 未初始化");
+                    }
+                }
+            }
+
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
+            DrawDefaultInspector();
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+}

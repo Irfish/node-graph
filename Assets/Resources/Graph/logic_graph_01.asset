@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0327287784e6184bb525c3cff170d42, type: 3}
+  m_Name: logic_graph_01
+  m_EditorClassIdentifier: 
+  m_nodes:
+  - rid: 4186388554481139732
+  - rid: 4186388554481139736
+  - rid: 4186388554481139737
+  - rid: 4186388603993325568
+  - rid: 4186388554481139738
+  - rid: 4186388603993325569
+  - rid: 4186388603993325570
+  - rid: 4186388603993325571
+  - rid: 4186388554481139739
+  - rid: 4186388603993325572
+  m_connections:
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 2
+    outputNodeId: 1
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 3
+    outputNodeId: 2
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 5
+    outputNodeId: 2
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 9
+    outputNodeId: 5
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 6
+    outputNodeId: 9
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 4
+    outputNodeId: 3
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 7
+    outputNodeId: 4
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 8
+    outputNodeId: 6
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 10
+    outputNodeId: 8
+  references:
+    version: 2
+    RefIds:
+    - rid: 4186388554481139732
+      type: {class: EnterNode, ns: LogicNode, asm: Assembly-CSharp}
+      data:
+        id: 1
+        position:
+          serializedVersion: 2
+          x: 173.2
+          y: 144
+          width: 92.80002
+          height: 76.8
+    - rid: 4186388554481139736
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 2
+        position:
+          serializedVersion: 2
+          x: 354.80002
+          y: 188.80002
+          width: 151.19998
+          height: 95.19998
+        delayTime: 5
+    - rid: 4186388554481139737
+      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 3
+        position:
+          serializedVersion: 2
+          x: 626.4
+          y: 144
+          width: 132
+          height: 76.8
+    - rid: 4186388554481139738
+      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 5
+        position:
+          serializedVersion: 2
+          x: 430.2
+          y: 364
+          width: 131.19998
+          height: 76.80002
+    - rid: 4186388554481139739
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 9
+        position:
+          serializedVersion: 2
+          x: 636
+          y: 459.2
+          width: 151.20001
+          height: 95.20001
+        delayTime: 4
+    - rid: 4186388603993325568
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 4
+        position:
+          serializedVersion: 2
+          x: 809.4
+          y: 93.600006
+          width: 100
+          height: 76.799995
+        delayTime: 2
+    - rid: 4186388603993325569
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 6
+        position:
+          serializedVersion: 2
+          x: 825.19995
+          y: 364
+          width: 100
+          height: 76.80002
+        delayTime: 6
+    - rid: 4186388603993325570
+      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 7
+        position:
+          serializedVersion: 2
+          x: 953.2
+          y: 143.59999
+          width: 108.80005
+          height: 76.8
+    - rid: 4186388603993325571
+      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 8
+        position:
+          serializedVersion: 2
+          x: 805
+          y: 244.2
+          width: NaN
+          height: NaN
+    - rid: 4186388603993325572
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 10
+        position:
+          serializedVersion: 2
+          x: 999.8
+          y: 287.2
+          width: 136.80005
+          height: 76.79999
+        delayTime: 3
