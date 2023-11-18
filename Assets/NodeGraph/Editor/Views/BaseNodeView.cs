@@ -15,6 +15,8 @@ namespace NodeGraph.Editor
         public T target;
         private BaseGraphView graphView;
         protected VisualElement controlsContainer;
+        protected readonly Dictionary<string, GraphPort> m_inputPorts = new();
+        protected readonly Dictionary<string, GraphPort> m_outputPorts = new();
 
         protected virtual void Init(BaseGraphView gView, T node)
         {
@@ -33,28 +35,47 @@ namespace NodeGraph.Editor
             node.onNodeTick = OnNodeTick;
             
             SetNodeHeadColor(Color.gray);
-            
-            if (target.isActive)
-            {
-                SetNodeHeadColor(Color.cyan);    
-            }
-
-            if (target.isDone)
-            {
-                SetNodeHeadColor(Color.yellow);
-            }
         }
 
         private void OnNodeInit()
         {
             SetNodeHeadColor(Color.gray);
+            
+            if (graphView.editorModel)
+            {
+                SetPortsEnabled(true);  
+            }
         }
 
         private void OnNodeActive()
         {
             SetNodeHeadColor(Color.cyan);
+            SetPortsEnabled(false);
         }
-        
+
+        protected void SetPortsEnabled(bool enabled)
+        {
+            foreach (var port in m_inputPorts)
+            {
+                foreach (var edge in port.Value.connections)
+                {
+                    edge.SetEnabled(enabled);
+                }
+                port.Value.SetEnabled(enabled);
+            }
+            
+            foreach (var port in m_outputPorts)
+            {
+                foreach (var edge in port.Value.connections)
+                {
+                    edge.SetEnabled(enabled);
+                }
+                port.Value.SetEnabled(enabled);
+            }
+            
+            this.SetEnabled(enabled);
+        }
+
         private void OnNodeFinished()
         {
             SetNodeHeadColor(Color.yellow);
@@ -95,7 +116,7 @@ namespace NodeGraph.Editor
                     var view = Activator.CreateInstance(viewType) as V;
                     if (view != null)
                     {
-                        node.GUID = Guid.NewGuid().ToString();
+                        //node.GUID = Guid.NewGuid().ToString();
                         node.customName = menu.nodeTitle;
                         view.Init(graphView, node);
                         return view;
@@ -113,7 +134,8 @@ namespace NodeGraph.Editor
             if (view != null && node != null)
             {
                 node.customName = menu.nodeTitle;
-                node.GUID = Guid.NewGuid().ToString();
+                node.id = BaseGraphView.GenNodeId();
+                //node.GUID = Guid.NewGuid().ToString();
                 node.InitWithGraph(graphView.graph);
                 view.Init(graphView, node);
                 return view;
@@ -125,14 +147,22 @@ namespace NodeGraph.Editor
 
     public abstract class BaseNodeView : NodeView<BaseNodeView, BaseNode>
     {
-        private readonly Dictionary<string, GraphPort> m_inputPorts = new();
-        private readonly Dictionary<string, GraphPort> m_outputPorts = new();
 
         protected sealed override void Init(BaseGraphView gView, BaseNode node)
         {
             base.Init(gView, node);
             InitPorts();
             OnInit();
+            
+            SetPortsEnabled(!node.isActive);
+            if (node.isActive)
+            {
+                SetNodeHeadColor(Color.cyan);    
+            }
+            if (node.isDone)
+            {
+                SetNodeHeadColor(Color.yellow);
+            }
         }
 
         private void InitPorts()

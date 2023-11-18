@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace NodeGraph
 {
@@ -8,7 +7,7 @@ namespace NodeGraph
         private readonly List<BaseNode> m_ticks = new();
         private readonly HashSet<int> m_tickCheck = new();
         private readonly List<BaseNode> m_nextTurn = new();
-        private readonly Dictionary<int, BaseNode> m_nodes = new();
+        private readonly List<BaseNode> m_nodes = new();
         private readonly FlowContext m_context;
         private BaseNode m_enterNode;
         private bool m_done;
@@ -24,9 +23,12 @@ namespace NodeGraph
             m_tickCheck.Clear();
             m_ticks.Clear();
             m_nextTurn.Clear();
+            m_nodes.Clear();
+            m_nodes.Add(m_enterNode);
+            m_enterNode.CollectConnectionNodes(m_nodes);
             foreach (var v in m_nodes)
             {
-                v.Value.Init();
+                v.Init();
             }
         }
 
@@ -34,7 +36,7 @@ namespace NodeGraph
         {
             foreach (var v in m_nodes)
             {
-                v.Value.MarkDone();
+                v.MarkDone();
             }
         }
 
@@ -55,19 +57,9 @@ namespace NodeGraph
             }
         }
 
-        public void Init(List<BaseNode> nodes)
+        public void Init(EnterNode node)
         {
-            m_nodes.Clear();
-            foreach (var n in nodes)
-            {
-                m_nodes[n.id] = n;
-                if (n is EnterNode enter)
-                {
-                    m_enterNode = enter;
-                }
-            }
-            
-            Debug.Assert(m_enterNode!=null,"没有EnterNode节点");
+            m_enterNode = node;
             Reset();
         }
 

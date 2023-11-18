@@ -16,11 +16,18 @@ namespace Example01
                 if (obj is BaseGraph graph)
                 {
                     m_graph = graph;
-                    var flow = new BaseFlow();
-                    flow.Init(graph.nodes);
-                    m_flow = flow;
-                    m_flow.Start();
-                    InvokeRepeating(nameof(FixedTick), 0, 0.1f);
+                    if (graph.enterNode != null)
+                    {
+                        var flow = new BaseFlow();
+                        flow.Init(graph.enterNode);
+                        m_flow = flow;
+                        m_flow.Start();
+                        InvokeRepeating(nameof(FixedTick), 0, 0.1f);     
+                    }
+                    else
+                    {
+                        Debug.LogError("没有EnterNode节点");
+                    }
                 }
             }
             else

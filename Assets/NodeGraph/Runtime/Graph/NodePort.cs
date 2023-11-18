@@ -28,7 +28,7 @@ namespace NodeGraph
         private readonly BaseNode owner;
         private readonly List<NodePort> connections = new();
         public string portName => data.name;
-
+        
         public NodePort(BaseNode owner, PortData data)
         {
             this.owner = owner;
@@ -43,6 +43,14 @@ namespace NodeGraph
             }
         }
 
+        public void Delink(NodePort port)
+        {
+            if (connections.Contains(port))
+            {
+                connections.Remove(port);
+            }
+        }
+
         public void Impulse(FlowContext ctx)
         {
             for (int i = 0, cnt = connections.Count; i < cnt; i++)
@@ -53,6 +61,19 @@ namespace NodeGraph
                 {
                     ownerNode.ImpulseInPort(port.portName, ctx);
                     ctx.TryAddNode(ownerNode);
+                }
+            }
+        }
+        
+        public void CollectConnectionNodes(List<BaseNode> nodes)
+        {
+            foreach (var port in connections)
+            {
+                var n = port.owner;
+                if (n != null)
+                {
+                    nodes.Add(n);
+                    n.CollectConnectionNodes(nodes);
                 }
             }
         }

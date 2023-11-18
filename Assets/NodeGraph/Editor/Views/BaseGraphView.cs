@@ -18,13 +18,18 @@ namespace NodeGraph.Editor
         private SearchNodeWindow m_searchWindowProvider;
 
         private Vector2 m_clickPosition;
-
         public event Action initEvents;
 
-        private readonly Dictionary<string, BaseNodeView> m_nodeViews = new();
+        private readonly Dictionary<int, BaseNodeView> m_nodeViewCache = new();
 
         private bool m_editorModel=true;
-        
+
+        private static int m_nodeMaxID;
+        public static int GenNodeId()
+        {
+            return ++m_nodeMaxID;
+        }
+
         public bool editorModel
         {
             set
@@ -133,10 +138,46 @@ namespace NodeGraph.Editor
 
         private void OnEdgeAdd(Edge edge)
         {
+            Debug.Log("添加 edge");
+            var input = edge.input;
+            var output = edge.output;
+            if (input!=null && output!=null)
+            {
+                if (input.node is BaseNodeView inputView && output.node is BaseNodeView outputView)
+                {
+                    var inputNode = inputView.target;
+                    var outputNode = outputView.target;
+                    var inputPort = inputNode.GetPort(NodePortType.Input, input.portName);
+                    var outputPort = outputNode.GetPort(NodePortType.Output, output.portName);
+                    if (inputPort != null && outputPort != null)
+                    {
+                        inputPort.LinkTo(outputPort);
+                        outputPort.LinkTo(inputPort);
+                    }
+                }
+            }
         }
 
         private void OnEdgeRemove(Edge edge)
         {
+            Debug.Log("remove edge");
+            var input = edge.input;
+            var output = edge.output;
+            if (input!=null && output!=null)
+            {
+                if (input.node is BaseNodeView inputView && output.node is BaseNodeView outputView)
+                {
+                    var inputNode = inputView.target;
+                    var outputNode = outputView.target;
+                    var inputPort = inputNode.GetPort(NodePortType.Input, input.portName);
+                    var outputPort = outputNode.GetPort(NodePortType.Output, output.portName);
+                    if (inputPort != null && outputPort != null)
+                    {
+                        inputPort.Delink(outputPort);
+                        outputPort.Delink(inputPort);
+                    }
+                }
+            }
         }
 
         private void OnNodeViewRemove(BaseNodeView nodeView)
@@ -144,9 +185,9 @@ namespace NodeGraph.Editor
             var node = nodeView.target;
             if (node != null)
             {
-                if (m_nodeViews.ContainsKey(node.GUID))
+                if (m_nodeViewCache.ContainsKey(node.id))
                 {
-                    m_nodeViews.Remove(node.GUID);
+                    m_nodeViewCache.Remove(node.id);
                 }
             }
         }
@@ -156,7 +197,7 @@ namespace NodeGraph.Editor
             var node = nodeView.target;
             if (node != null)
             {
-                m_nodeViews[node.GUID] = nodeView;
+                m_nodeViewCache[node.id] = nodeView;
             }
         }
         
@@ -165,16 +206,49 @@ namespace NodeGraph.Editor
             var portList = ports.ToList();
             foreach (var port in portList)
             {
+                if (anable)
+                {
+                    if (port.node is BaseNodeView nodeView)
+                    {
+                        var n = nodeView.target;
+                        if (n.isActive)
+                        {
+                            port.SetEnabled(false);
+                            continue;
+                        }
+                    }
+                }
                 port.SetEnabled(anable);
             }
 
             var edgeList = edges.ToList();
             foreach (var edge in edgeList)
             {
+                if (anable)
+                {
+                    if (edge.input.node is BaseNodeView inputNodeView)
+                    {
+                        var n = inputNodeView.target;
+                        if (n.isActive)
+                        {
+                            edge.SetEnabled(false);
+                            continue;
+                        }
+                    }
+                    if (edge.output.node is BaseNodeView outNodeView)
+                    {
+                        var n = outNodeView.target;
+                        if (n.isActive)
+                        {
+                            edge.SetEnabled(false);
+                            continue;
+                        }
+                    }
+                }
                 edge.SetEnabled(anable);
             }
         }
-        
+
         public void ResetPositionAndZoom()
         {
             UpdateViewTransform(Vector3.zero, Vector3.one);
@@ -271,7 +345,7 @@ namespace NodeGraph.Editor
 
         private void ClearView()
         {
-            m_nodeViews.Clear();
+            m_nodeViewCache.Clear();
             var nodeList = nodes.ToList();
             foreach (var n in nodeList)
             {
@@ -285,18 +359,24 @@ namespace NodeGraph.Editor
             }
         }
 
-        
+         
         private void InitView()
         {
+            m_nodeViewCache.Clear();
             var graphNodes = graph.nodes;
             graphNodes.RemoveAll(n => n == null);
-            Dictionary<int, BaseNodeView> m_nodeViewCache = new(graphNodes.Count);
+            m_nodeMaxID = 0;
+            
             foreach (var node in graphNodes)
             {
                 var view = AddNode(node);
                 if (view != null)
                 {
                     m_nodeViewCache[node.id] = view;
+                    if (m_nodeMaxID < node.id)
+                    {
+                        m_nodeMaxID = node.id;
+                    }
                 }
             }
                
@@ -428,6 +508,8 @@ namespace NodeGraph.Editor
                     AddNodeToScriptableGraph(editor);
                 }
             }
+
+            m_nodeMaxID = nodeList.Count + 1;
 
             var list = edges.ToList();
             foreach (var e in list)

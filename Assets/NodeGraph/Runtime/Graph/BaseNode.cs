@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NodeGraph
@@ -50,6 +51,8 @@ namespace NodeGraph
 
         public void InitWithGraph(BaseGraph g)
         {
+            m_done = false;
+            m_active = false;
             graph = g;
             InitPorts();
         }
@@ -109,6 +112,14 @@ namespace NodeGraph
             }
 
             return null;
+        }
+            
+        public void CollectConnectionNodes(List<BaseNode> nodes)
+        {
+            foreach (var port in outputPorts)
+            {
+                port.CollectConnectionNodes(nodes);
+            }
         }
 
         #region ISerializationCallbackReceiver

@@ -16,6 +16,7 @@ namespace NodeGraph
         protected override bool OnTick(float dt, FlowContext ctx)
         {
             Debug.Log("Start");
+            Active();
             ImpulseOutPort(OUTPUT_PORT,ctx);
             return true;
         }

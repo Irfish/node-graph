@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ namespace NodeGraph
 
         [SerializeField] private List<PortConnection> m_connections = new();
         public List<BaseNode> nodes => m_nodes;
+        
+        [NonSerialized]
+        public EnterNode enterNode;
             
         #region ISerializationCallbackReceiver
         
@@ -24,6 +28,10 @@ namespace NodeGraph
             {
                 node.InitWithGraph(this);
                 guidToNode[node.id] = node;
+                if (node is EnterNode enter)
+                {
+                    enterNode = enter;
+                }
             }
 
             foreach (var connection in m_connections)
