@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: logic_graph_01
   m_EditorClassIdentifier: 
   m_nodes:
-  - rid: 4186388554481139732
   - rid: 4186388554481139736
   - rid: 4186388554481139737
   - rid: 4186388603993325568
@@ -23,6 +22,7 @@ MonoBehaviour:
   - rid: 4186388603993325571
   - rid: 4186388554481139739
   - rid: 4186388603993325572
+  - rid: 4186388734965972992
   m_connections:
   - inputPortName: in
     outputPortName: out
@@ -30,53 +30,43 @@ MonoBehaviour:
     outputNodeId: 1
   - inputPortName: in
     outputPortName: out
+    inputNodeId: 4
+    outputNodeId: 1
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 8
+    outputNodeId: 4
+  - inputPortName: in
+    outputPortName: out
+    inputNodeId: 5
+    outputNodeId: 8
+  - inputPortName: in
+    outputPortName: out
     inputNodeId: 3
     outputNodeId: 2
   - inputPortName: in
     outputPortName: out
-    inputNodeId: 5
-    outputNodeId: 2
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 9
-    outputNodeId: 5
-  - inputPortName: in
-    outputPortName: out
     inputNodeId: 6
-    outputNodeId: 9
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 4
     outputNodeId: 3
   - inputPortName: in
     outputPortName: out
     inputNodeId: 7
-    outputNodeId: 4
+    outputNodeId: 5
   - inputPortName: in
     outputPortName: out
-    inputNodeId: 8
-    outputNodeId: 6
+    inputNodeId: 9
+    outputNodeId: 7
   - inputPortName: in
     outputPortName: out
-    inputNodeId: 10
-    outputNodeId: 8
+    inputNodeId: 1
+    outputNodeId: 10
   references:
     version: 2
     RefIds:
-    - rid: 4186388554481139732
-      type: {class: EnterNode, ns: LogicNode, asm: Assembly-CSharp}
-      data:
-        id: 1
-        position:
-          serializedVersion: 2
-          x: 173.2
-          y: 144
-          width: 92.80002
-          height: 76.8
     - rid: 4186388554481139736
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 2
+        id: 1
         position:
           serializedVersion: 2
           x: 354.80002
@@ -87,7 +77,7 @@ MonoBehaviour:
     - rid: 4186388554481139737
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 3
+        id: 2
         position:
           serializedVersion: 2
           x: 626.4
@@ -97,7 +87,7 @@ MonoBehaviour:
     - rid: 4186388554481139738
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 5
+        id: 4
         position:
           serializedVersion: 2
           x: 430.2
@@ -107,7 +97,7 @@ MonoBehaviour:
     - rid: 4186388554481139739
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 9
+        id: 8
         position:
           serializedVersion: 2
           x: 636
@@ -118,7 +108,7 @@ MonoBehaviour:
     - rid: 4186388603993325568
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 4
+        id: 3
         position:
           serializedVersion: 2
           x: 809.4
@@ -129,7 +119,7 @@ MonoBehaviour:
     - rid: 4186388603993325569
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 6
+        id: 5
         position:
           serializedVersion: 2
           x: 825.19995
@@ -140,7 +130,7 @@ MonoBehaviour:
     - rid: 4186388603993325570
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 7
+        id: 6
         position:
           serializedVersion: 2
           x: 953.2
@@ -150,7 +140,7 @@ MonoBehaviour:
     - rid: 4186388603993325571
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 8
+        id: 7
         position:
           serializedVersion: 2
           x: 805
@@ -160,7 +150,7 @@ MonoBehaviour:
     - rid: 4186388603993325572
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 10
+        id: 9
         position:
           serializedVersion: 2
           x: 999.8
@@ -168,3 +158,13 @@ MonoBehaviour:
           width: 136.80005
           height: 76.79999
         delayTime: 3
+    - rid: 4186388734965972992
+      type: {class: EnterNode, ns: NodeGraph, asm: Assembly-CSharp}
+      data:
+        id: 10
+        position:
+          serializedVersion: 2
+          x: 207
+          y: 108.2
+          width: NaN
+          height: NaN

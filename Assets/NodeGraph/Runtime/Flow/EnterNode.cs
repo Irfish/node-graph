@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace NodeGraph
 {
+    [Serializable]
     [NodeMenu("Nodes/Flow/Enter","入口")]
     public class EnterNode : BaseNode
     {
