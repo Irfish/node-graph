@@ -6,16 +6,16 @@
 
 ## 已实现的功能
 
-- ### 可自定义节点;
+- 可自定义节点;
 
-- ### 使用ScriptableObject持久化存储;
+- 使用ScriptableObject持久化存储;
 
-- ### 运行时可预览节点状态和编辑未激活的节点;
+- 运行时可预览节点状态和编辑未激活的节点;
 
 ## 使用
-- ### 运行Example01场景
-- ### 选择test
-- ### 在Inspector中点击"Start"按钮执行默认节点图"logic_graph_01.asset"
-- ### 点击"open graph"按钮打开节点图预览执行状态
+- 运行Example01场景
+- 选择test
+- 在Inspector中点击"Start"按钮执行默认节点图"logic_graph_01.asset"
+- 点击"open graph"按钮打开节点图预览执行状态
 
 
