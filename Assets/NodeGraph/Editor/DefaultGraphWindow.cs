@@ -5,7 +5,7 @@ namespace NodeGraph.Editor
 {
     public class DefaultGraphWindow : BaseGraphWindow
     {
-        protected override void InitWindow(BaseGraph g)
+        protected override void InitWindow(IGraphSerializer g)
         {
             titleContent = new GUIContent("Default Graph");
             if (graphView == null)
@@ -20,16 +20,16 @@ namespace NodeGraph.Editor
         [MenuItem("Graph/01 DefaultGraph")]
         public static void OpenWithNewGraph()
         {
-            var graph = ScriptableObject.CreateInstance<BaseGraph>();
+            var graph = ScriptableObject.CreateInstance<GraphScriptable>();
             graph.hideFlags = HideFlags.HideAndDontSave;
             graph.name = "logic_graph_new";
             OpenWithGraph(graph);
         }
 
-        public static void OpenWithGraph(BaseGraph graph)
+        public static void OpenWithGraph(IGraphSerializer graphSerializer)
         {
             var graphWindow = CreateWindow<DefaultGraphWindow>();
-            graphWindow.InitGraph(graph);
+            graphWindow.InitGraph(graphSerializer);
             graphWindow.Show();
         }
     }

@@ -1,25 +1,27 @@
 using NodeGraph;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Example01
 {
     public class TestFlow : MonoBehaviour
     {
         private BaseFlow m_flow;
-        public BaseGraph m_graph;
+        [FormerlySerializedAs("mGraphSerializerScriptable")] [FormerlySerializedAs("mNodeGraphScriptable")] [FormerlySerializedAs("m_graph")] public GraphScriptable mGraphScriptable;
         
         private void LoadGraph()
         {
             var obj = Resources.Load<ScriptableObject>("Graph/logic_graph_01");
             if (obj != null)
             {
-                if (obj is BaseGraph graph)
+                if (obj is GraphScriptable graph)
                 {
-                    m_graph = graph;
-                    if (graph.enterNode != null)
+                    mGraphScriptable = graph;
+                    var enterNode = graph.graph.enterNode;
+                    if (enterNode != null)
                     {
                         var flow = new BaseFlow();
-                        flow.Init(graph.enterNode);
+                        flow.Init(enterNode);
                         m_flow = flow;
                         m_flow.Start();
                         InvokeRepeating(nameof(FixedTick), 0, 0.1f);     

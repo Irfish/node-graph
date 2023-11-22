@@ -4,33 +4,43 @@ using UnityEngine;
 
 namespace NodeGraph
 {
-    public class BaseGraph : ScriptableObject, ISerializationCallbackReceiver
+    [Serializable]
+    public class GraphData : ISerializationCallbackReceiver
     {
+        private EnterNode m_enterNode;
+
         [SerializeReference] private List<BaseNode> m_nodes = new();
 
         [SerializeField] private List<PortConnection> m_connections = new();
+
         public List<BaseNode> nodes => m_nodes;
-        
-        [NonSerialized]
-        public EnterNode enterNode;
-            
+
+        public EnterNode enterNode => m_enterNode;
+
         #region ISerializationCallbackReceiver
-        
+
         public void OnBeforeSerialize()
         {
         }
 
         public void OnAfterDeserialize()
         {
+            OnDeserialize();
+        }
+
+        #endregion
+
+        private void OnDeserialize()
+        {
             Dictionary<int, BaseNode> guidToNode = new();
-            
+
             foreach (var node in m_nodes)
             {
-                node.InitWithGraph(this);
+                node.Reset();
                 guidToNode[node.id] = node;
                 if (node is EnterNode enter)
                 {
-                    enterNode = enter;
+                    m_enterNode = enter;
                 }
             }
 
@@ -51,20 +61,24 @@ namespace NodeGraph
             }
         }
 
-        #endregion
-
-        public List<PortConnection> connections => m_connections;
 
 #if UNITY_EDITOR
-       
+        public List<PortConnection> connections => m_connections;
+
+        public void Reset()
+        {
+            nodes.Clear();
+            connections.Clear();
+        }
+
         public void AddNode(BaseNode node)
         {
-            m_nodes.Add(node);
+            nodes.Add(node);
         }
 
         public void AddConnection(PortConnection connection)
         {
-            m_connections.Add(connection);
+            connections.Add(connection);
         }
 #endif
     }

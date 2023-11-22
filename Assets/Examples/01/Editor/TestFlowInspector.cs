@@ -21,7 +21,7 @@ namespace Example01.Editor
 
                 if (GUILayout.Button("open graph"))
                 {
-                    var graph = testFlow.m_graph;
+                    var graph = testFlow.mGraphScriptable;
                     if (graph != null)
                     {
                         DefaultGraphWindow.OpenWithGraph(graph);

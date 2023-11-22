@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace NodeGraph.Editor
 {
-    [CustomEditor( typeof( BaseGraph ) )]
-    public class BaseGraphInspector : UnityEditor.Editor
+    [CustomEditor( typeof( GraphScriptable ) )]
+    public class GraphScriptableInspector : UnityEditor.Editor
     {
         public override void OnInspectorGUI() {
             serializedObject.Update();
 
             if ( GUILayout.Button( "open graph" ) ) {
-                var t = serializedObject.targetObject as BaseGraph;
+                var t = serializedObject.targetObject as GraphScriptable;
                 DefaultGraphWindow.OpenWithGraph( t );
             }
             

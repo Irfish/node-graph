@@ -25,25 +25,25 @@ namespace NodeGraph.Editor
             title = node.name;
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(baseNodeStylePath);
             styleSheets.Add(styleSheet);
-            controlsContainer = new VisualElement{ name = "controls" };
+            controlsContainer = new VisualElement { name = "controls" };
             controlsContainer.AddToClassList("NodeControls");
             mainContainer.Add(controlsContainer);
-            
+
             node.onNodeInit = OnNodeInit;
             node.onNodeActive = OnNodeActive;
             node.onNodeFinished = OnNodeFinished;
             node.onNodeTick = OnNodeTick;
-            
+
             SetNodeHeadColor(Color.gray);
         }
 
         private void OnNodeInit()
         {
             SetNodeHeadColor(Color.gray);
-            
+
             if (graphView.editorModel)
             {
-                SetPortsEnabled(true);  
+                SetPortsEnabled(true);
             }
         }
 
@@ -61,18 +61,20 @@ namespace NodeGraph.Editor
                 {
                     edge.SetEnabled(enabled);
                 }
+
                 port.Value.SetEnabled(enabled);
             }
-            
+
             foreach (var port in m_outputPorts)
             {
                 foreach (var edge in port.Value.connections)
                 {
                     edge.SetEnabled(enabled);
                 }
+
                 port.Value.SetEnabled(enabled);
             }
-            
+
             this.SetEnabled(enabled);
         }
 
@@ -80,10 +82,9 @@ namespace NodeGraph.Editor
         {
             SetNodeHeadColor(Color.yellow);
         }
-        
+
         private void OnNodeTick(float dt)
         {
-            
         }
 
         protected virtual void SetNodeHeadColor(Color color)
@@ -135,8 +136,7 @@ namespace NodeGraph.Editor
             {
                 node.customName = menu.nodeTitle;
                 node.id = BaseGraphView.GenNodeId();
-                //node.GUID = Guid.NewGuid().ToString();
-                node.InitWithGraph(graphView.graph);
+                node.Reset();
                 view.Init(graphView, node);
                 return view;
             }
@@ -147,18 +147,18 @@ namespace NodeGraph.Editor
 
     public abstract class BaseNodeView : NodeView<BaseNodeView, BaseNode>
     {
-
         protected sealed override void Init(BaseGraphView gView, BaseNode node)
         {
             base.Init(gView, node);
             InitPorts();
             OnInit();
-            
+
             SetPortsEnabled(!node.isActive);
             if (node.isActive)
             {
-                SetNodeHeadColor(Color.cyan);    
+                SetNodeHeadColor(Color.cyan);
             }
+
             if (node.isDone)
             {
                 SetNodeHeadColor(Color.yellow);

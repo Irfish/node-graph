@@ -12,159 +12,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0327287784e6184bb525c3cff170d42, type: 3}
   m_Name: logic_graph_01
   m_EditorClassIdentifier: 
-  m_nodes:
-  - rid: 4186388554481139736
-  - rid: 4186388554481139737
-  - rid: 4186388603993325568
-  - rid: 4186388554481139738
-  - rid: 4186388603993325569
-  - rid: 4186388603993325570
-  - rid: 4186388603993325571
-  - rid: 4186388554481139739
-  - rid: 4186388603993325572
-  - rid: 4186388734965972992
-  m_connections:
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 2
-    outputNodeId: 1
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 4
-    outputNodeId: 1
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 8
-    outputNodeId: 4
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 5
-    outputNodeId: 8
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 3
-    outputNodeId: 2
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 6
-    outputNodeId: 3
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 7
-    outputNodeId: 5
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 9
-    outputNodeId: 7
-  - inputPortName: in
-    outputPortName: out
-    inputNodeId: 1
-    outputNodeId: 10
+  m_graph:
+    m_nodes:
+    - rid: 4186388808580988935
+    - rid: 4186388808580988944
+    - rid: 4186388808580988945
+    - rid: 4186388808580988946
+    - rid: 4186388808580988936
+    - rid: 4186388808580988947
+    - rid: 4186388808580988948
+    m_connections:
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 5
+      outputNodeId: 1
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 1
+      outputNodeId: 2
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 3
+      outputNodeId: 1
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 4
+      outputNodeId: 3
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 6
+      outputNodeId: 5
+    - inputPortName: in
+      outputPortName: out
+      inputNodeId: 7
+      outputNodeId: 6
   references:
     version: 2
     RefIds:
-    - rid: 4186388554481139736
+    - rid: 4186388808580988935
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
         id: 1
         position:
           serializedVersion: 2
-          x: 354.80002
-          y: 188.80002
-          width: 151.19998
-          height: 95.19998
+          x: 319.8
+          y: 97.776
+          width: 116.80002
+          height: 96.00001
         delayTime: 5
-    - rid: 4186388554481139737
+    - rid: 4186388808580988936
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+      data:
+        id: 5
+        position:
+          serializedVersion: 2
+          x: 592.8
+          y: 111.19998
+          width: 131.20001
+          height: 76.8
+    - rid: 4186388808580988944
+      type: {class: EnterNode, ns: NodeGraph, asm: Assembly-CSharp}
       data:
         id: 2
         position:
           serializedVersion: 2
-          x: 626.4
-          y: 144
-          width: 132
-          height: 76.8
-    - rid: 4186388554481139738
-      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
-      data:
-        id: 4
-        position:
-          serializedVersion: 2
-          x: 430.2
-          y: 364
-          width: 131.19998
-          height: 76.80002
-    - rid: 4186388554481139739
-      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
-      data:
-        id: 8
-        position:
-          serializedVersion: 2
-          x: 636
-          y: 459.2
-          width: 151.20001
-          height: 95.20001
-        delayTime: 4
-    - rid: 4186388603993325568
+          x: 139
+          y: 149.2
+          width: NaN
+          height: NaN
+    - rid: 4186388808580988945
       type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
         id: 3
         position:
           serializedVersion: 2
-          x: 809.4
-          y: 93.600006
-          width: 100
-          height: 76.799995
-        delayTime: 2
-    - rid: 4186388603993325569
-      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
+          x: 581.4
+          y: 312.2
+          width: 118.39996
+          height: 96
+        delayTime: 5
+    - rid: 4186388808580988946
+      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
-        id: 5
+        id: 4
         position:
           serializedVersion: 2
-          x: 825.19995
-          y: 364
-          width: 100
+          x: 881
+          y: 353
+          width: 132
           height: 76.80002
-        delayTime: 6
-    - rid: 4186388603993325570
-      type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
+    - rid: 4186388808580988947
+      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
       data:
         id: 6
         position:
           serializedVersion: 2
-          x: 953.2
-          y: 143.59999
-          width: 108.80005
-          height: 76.8
-    - rid: 4186388603993325571
+          x: 918
+          y: 124.2
+          width: NaN
+          height: NaN
+        delayTime: 5
+    - rid: 4186388808580988948
       type: {class: PrintNode, ns: Example01, asm: Assembly-CSharp}
       data:
         id: 7
         position:
           serializedVersion: 2
-          x: 805
-          y: 244.2
-          width: NaN
-          height: NaN
-    - rid: 4186388603993325572
-      type: {class: DelayNode, ns: Example01, asm: Assembly-CSharp}
-      data:
-        id: 9
-        position:
-          serializedVersion: 2
-          x: 999.8
-          y: 287.2
-          width: 136.80005
-          height: 76.79999
-        delayTime: 3
-    - rid: 4186388734965972992
-      type: {class: EnterNode, ns: NodeGraph, asm: Assembly-CSharp}
-      data:
-        id: 10
-        position:
-          serializedVersion: 2
-          x: 207
-          y: 108.2
+          x: 1098
+          y: 265.2
           width: NaN
           height: NaN

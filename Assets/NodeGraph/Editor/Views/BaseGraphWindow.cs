@@ -10,7 +10,7 @@ namespace NodeGraph.Editor
         private const string graphWindowStylePath = "Assets/NodeGraph/Editor/Src/Styles/BaseGraphView.uss";
         protected VisualElement rootView;
         protected BaseGraphView graphView;
-        protected BaseGraph graph;
+        protected IGraphSerializer GraphSerializer;
 
         protected virtual void OnEnable()
         {
@@ -20,9 +20,9 @@ namespace NodeGraph.Editor
         protected virtual void Update()
         {
             var obj = Selection.activeObject;
-            if (obj != null && obj is BaseGraph g)
+            if (obj != null && obj is IGraphSerializer g)
             {
-                if(g!=graph)
+                if(g!=GraphSerializer)
                 {
                     InitGraph(g);
                 }
@@ -37,18 +37,18 @@ namespace NodeGraph.Editor
             rootView.styleSheets.Add(styleSheet);
         }
 
-        protected void InitGraph(BaseGraph g)
+        protected void InitGraph(IGraphSerializer g)
         {
-            graph = g;
+            GraphSerializer = g;
 
             if (graphView != null)
                 rootView.Remove(graphView);
 
-            InitWindow(graph);
+            InitWindow(GraphSerializer);
             graphView = rootView.Children().FirstOrDefault(e => e is BaseGraphView) as BaseGraphView;
             if (graphView != null)
             {
-                graphView.Init(graph);
+                graphView.Init(GraphSerializer);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace NodeGraph.Editor
             }
         }
 
-        protected abstract void InitWindow(BaseGraph graph);
+        protected abstract void InitWindow(IGraphSerializer graphSerializer);
     }
 
 }

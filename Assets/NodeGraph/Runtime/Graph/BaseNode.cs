@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NodeGraph
@@ -13,8 +12,6 @@ namespace NodeGraph
 
         public int id;
         public Rect position;
-        [NonSerialized] public string GUID;
-        [NonSerialized] protected BaseGraph graph;
         [NonSerialized] public List<NodePort> inputPorts = new();
         [NonSerialized] public List<NodePort> outputPorts = new();
         [NonSerialized] public string customName = string.Empty;
@@ -49,11 +46,10 @@ namespace NodeGraph
             }
         }
 
-        public void InitWithGraph(BaseGraph g)
+        public void Reset()
         {
             m_done = false;
             m_active = false;
-            graph = g;
             InitPorts();
         }
 

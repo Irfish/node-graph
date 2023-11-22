@@ -53,7 +53,13 @@ namespace NodeGraph.Editor
         {
             AddButton("Center", graphView.ResetPositionAndZoom);
 
-            AddButton("Show In Project", () => EditorGUIUtility.PingObject(graphView.graph), false);
+            AddButton("Show In Project", () =>
+            {
+                if (graphView.graphSerializer is ScriptableObject obj)
+                {
+                    EditorGUIUtility.PingObject(obj);
+                }
+            }, false);
         }
 
         protected ToolbarButtonData AddButton(string btnName, Action callback, bool left = true)

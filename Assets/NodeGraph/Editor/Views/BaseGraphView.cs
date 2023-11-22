@@ -13,7 +13,7 @@ namespace NodeGraph.Editor
     {
         private const string graphBackGroundPath = "Assets/NodeGraph/Editor/Src/Styles/GraphBackGround.uss";
 
-        public BaseGraph graph;
+        public IGraphSerializer graphSerializer;
 
         private SearchNodeWindow m_searchWindowProvider;
 
@@ -22,9 +22,10 @@ namespace NodeGraph.Editor
 
         private readonly Dictionary<int, BaseNodeView> m_nodeViewCache = new();
 
-        private bool m_editorModel=true;
+        private bool m_editorModel = true;
 
         private static int m_nodeMaxID;
+
         public static int GenNodeId()
         {
             return ++m_nodeMaxID;
@@ -38,6 +39,7 @@ namespace NodeGraph.Editor
                 {
                     SetElementsEnabled(value);
                 }
+
                 m_editorModel = value;
             }
             get => m_editorModel;
@@ -94,14 +96,14 @@ namespace NodeGraph.Editor
             m_searchWindowProvider.onSelectMenuEntryHandler = OnSelectMenuEntry;
         }
 
-        private void OnDeleteSelection(string optName,AskUser askUser)
+        private void OnDeleteSelection(string optName, AskUser askUser)
         {
             this.DeleteSelection();
         }
-        
+
         public override EventPropagation DeleteSelection()
         {
-            if (!editorModel) return EventPropagation.Continue;  
+            if (!editorModel) return EventPropagation.Continue;
             return base.DeleteSelection();
         }
 
@@ -141,7 +143,7 @@ namespace NodeGraph.Editor
             Debug.Log("添加 edge");
             var input = edge.input;
             var output = edge.output;
-            if (input!=null && output!=null)
+            if (input != null && output != null)
             {
                 if (input.node is BaseNodeView inputView && output.node is BaseNodeView outputView)
                 {
@@ -163,7 +165,7 @@ namespace NodeGraph.Editor
             Debug.Log("remove edge");
             var input = edge.input;
             var output = edge.output;
-            if (input!=null && output!=null)
+            if (input != null && output != null)
             {
                 if (input.node is BaseNodeView inputView && output.node is BaseNodeView outputView)
                 {
@@ -200,7 +202,7 @@ namespace NodeGraph.Editor
                 m_nodeViewCache[node.id] = nodeView;
             }
         }
-        
+
         private void SetElementsEnabled(bool anable)
         {
             var portList = ports.ToList();
@@ -218,6 +220,7 @@ namespace NodeGraph.Editor
                         }
                     }
                 }
+
                 port.SetEnabled(anable);
             }
 
@@ -235,6 +238,7 @@ namespace NodeGraph.Editor
                             continue;
                         }
                     }
+
                     if (edge.output.node is BaseNodeView outNodeView)
                     {
                         var n = outNodeView.target;
@@ -245,6 +249,7 @@ namespace NodeGraph.Editor
                         }
                     }
                 }
+
                 edge.SetEnabled(anable);
             }
         }
@@ -256,8 +261,8 @@ namespace NodeGraph.Editor
 
         private void NodeCreationRequest(NodeCreationContext context)
         {
-            if(!editorModel) return;
-            
+            if (!editorModel) return;
+
             SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), m_searchWindowProvider);
         }
 
@@ -276,9 +281,9 @@ namespace NodeGraph.Editor
             base.BuildContextualMenu(evt);
 
             m_clickPosition = contentViewContainer.WorldToLocal(evt.mousePosition);
-            
-            if(!editorModel) return;
-            
+
+            if (!editorModel) return;
+
             var list = NodeTypes.GetNodeMenus();
             foreach (var menu in list)
             {
@@ -330,9 +335,9 @@ namespace NodeGraph.Editor
         }
 
 
-        public void Init(BaseGraph g)
+        public void Init(IGraphSerializer g)
         {
-            graph = g;
+            graphSerializer = g;
             ClearView();
             InitView();
             OnInit();
@@ -359,14 +364,14 @@ namespace NodeGraph.Editor
             }
         }
 
-         
+
         private void InitView()
         {
             m_nodeViewCache.Clear();
-            var graphNodes = graph.nodes;
+            var graphNodes = graphSerializer.graph.nodes;
             graphNodes.RemoveAll(n => n == null);
             m_nodeMaxID = 0;
-            
+
             foreach (var node in graphNodes)
             {
                 var view = AddNode(node);
@@ -379,8 +384,8 @@ namespace NodeGraph.Editor
                     }
                 }
             }
-               
-            var graphConnections = graph.connections;  
+
+            var graphConnections = graphSerializer.graph.connections;
             graphConnections.RemoveAll(n => n == null);
             foreach (var e in graphConnections)
             {
@@ -406,7 +411,7 @@ namespace NodeGraph.Editor
             var node = editor.target;
             if (node != null)
             {
-                graph.AddNode(node);
+                graphSerializer.graph.AddNode(node);
             }
         }
 
@@ -435,7 +440,7 @@ namespace NodeGraph.Editor
             var data = CreateEdgeData(e);
             if (data != null)
             {
-                graph.AddConnection(data);
+                graphSerializer.graph.AddConnection(data);
             }
         }
 
@@ -485,18 +490,17 @@ namespace NodeGraph.Editor
 
             return true;
         }
-        
+
         public void RefreshGraph()
         {
             ResetGraphData();
             ClearView();
             InitView();
         }
-        
+
         private void ResetGraphData()
         {
-            graph.nodes.Clear();
-            graph.connections.Clear();
+            graphSerializer.graph.Reset();
 
             var nodeList = nodes.ToList();
             for (var i = 0; i < nodeList.Count; i++)
@@ -521,13 +525,13 @@ namespace NodeGraph.Editor
         public void SaveGraphToDisk()
         {
             ResetGraphData();
-            FileUtils.SaveGraph(graph);
+            FileUtils.SaveGraph(graphSerializer);
         }
 
         public void SaveGraphToDiskAsNew()
         {
             ResetGraphData();
-            FileUtils.SaveGraphAsNew(graph);
+            FileUtils.SaveGraphAsNew(graphSerializer);
         }
     }
 }

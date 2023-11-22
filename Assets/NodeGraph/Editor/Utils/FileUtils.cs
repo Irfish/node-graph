@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace NodeGraph.Editor
@@ -21,18 +22,33 @@ namespace NodeGraph.Editor
             return path;
         }
         
-        public static void SaveGraph(BaseGraph graph)
+        public static void SaveGraph(IGraphSerializer graphSerializer)
         {
-            AssetDatabase.SaveAssets();
-            EditorUtility.DisplayDialog("提示", "保存成功", "OK");
-            var path = AssetDatabase.GetAssetPath(graph);
-            var m = AssetDatabase.LoadAssetAtPath<BaseGraph>(path);
-            EditorGUIUtility.PingObject(m);
+            if (graphSerializer is ScriptableObject obj)
+            {
+                AssetDatabase.SaveAssets();
+                EditorUtility.DisplayDialog("提示", "保存成功", "OK");
+                var path = AssetDatabase.GetAssetPath(obj);
+                var m = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+                EditorGUIUtility.PingObject(m);    
+            }
+            else if (graphSerializer is MonoBehaviour mono)
+            {
+                var go = mono.gameObject;
+                if (EditorUtility.IsPersistent(go))
+                {
+                    PrefabUtility.SavePrefabAsset(go);
+                }
+                else
+                {
+                    PrefabUtility.ApplyPrefabInstance(go,InteractionMode.AutomatedAction);
+                }
+            }
         }
         
-        public static void SaveGraphAsNew(BaseGraph graph)
+        public static void SaveGraphAsNew(IGraphSerializer graphSerializer)
         {
-            var path = SelectFilePath(graph.name);
+            var path = SelectFilePath(graphSerializer.graphName);
             if (string.IsNullOrEmpty(path))
             {
                 return;
@@ -42,14 +58,17 @@ namespace NodeGraph.Editor
             if (arr.Length > 0)
             {
                 var arr1 = arr[^1].Split(".");
-                graph.name = arr1[0];
-                var copy = Object.Instantiate(graph);
-                copy.name = graph.name;
-                AssetDatabase.CreateAsset(copy, path);
-                AssetDatabase.SaveAssets();
-                EditorUtility.DisplayDialog("提示", "保存成功", "OK");
-                var m = AssetDatabase.LoadAssetAtPath<BaseGraph>(path);
-                EditorGUIUtility.PingObject(m);
+                graphSerializer.graphName = arr1[0];
+                if (graphSerializer is ScriptableObject obj)
+                {
+                    var copy = Object.Instantiate(obj);
+                    copy.name = obj.name;
+                    AssetDatabase.CreateAsset(copy, path);
+                    AssetDatabase.SaveAssets();
+                    EditorUtility.DisplayDialog("提示", "保存成功", "OK");
+                    var m = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+                    EditorGUIUtility.PingObject(m); 
+                }
             }
         }
     }
