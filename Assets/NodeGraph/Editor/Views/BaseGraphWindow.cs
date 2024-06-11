@@ -7,7 +7,6 @@ namespace NodeGraph.Editor
 {
     public abstract class BaseGraphWindow : EditorWindow
     {
-        private const string graphWindowStylePath = "Assets/NodeGraph/Editor/Src/Styles/BaseGraphView.uss";
         protected VisualElement rootView;
         protected BaseGraphView graphView;
         protected IGraphSerializer GraphSerializer;
@@ -33,7 +32,7 @@ namespace NodeGraph.Editor
         {
             rootView = base.rootVisualElement;
             rootView.name = "graphRootView";
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(graphWindowStylePath);
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(SrcDefine.graphWindowStylePath);
             rootView.styleSheets.Add(styleSheet);
         }
 

@@ -11,8 +11,7 @@ namespace NodeGraph.Editor
 {
     public sealed class BaseGraphView : GraphView
     {
-        private const string graphBackGroundPath = "Assets/NodeGraph/Editor/Src/Styles/GraphBackGround.uss";
-
+        
         public IGraphSerializer graphSerializer;
 
         private SearchNodeWindow m_searchWindowProvider;
@@ -86,7 +85,7 @@ namespace NodeGraph.Editor
         private void SetBackGroud()
         {
             Insert(0, new GridBackground());
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(graphBackGroundPath);
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(SrcDefine.graphBackGroundPath);
             styleSheets.Add(styleSheet);
         }
 

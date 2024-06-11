@@ -42,19 +42,15 @@ namespace NodeGraph
 
         private void TryAddToTickList(BaseNode node)
         {
-            if (!m_tickCheck.Contains(node.id))
+            if (m_tickCheck.Add(node.id))
             {
-                m_tickCheck.Add(node.id);
                 m_ticks.Add(node);
             }
         }
 
         private void TryRemoveFromCheck(int id)
         {
-            if (m_tickCheck.Contains(id))
-            {
-                m_tickCheck.Remove(id);
-            }
+            m_tickCheck.Remove(id);
         }
 
         public void Init(EnterNode node)

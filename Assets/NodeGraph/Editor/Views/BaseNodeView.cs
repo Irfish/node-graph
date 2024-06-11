@@ -11,7 +11,6 @@ namespace NodeGraph.Editor
 {
     public class NodeView<V, T> : GraphNode where T : BaseNode where V : NodeView<V, T>
     {
-        private const string baseNodeStylePath = "Assets/NodeGraph/Editor/Src/Styles/BaseNodeView.uss";
         public T target;
         private BaseGraphView graphView;
         protected VisualElement controlsContainer;
@@ -23,7 +22,7 @@ namespace NodeGraph.Editor
             target = node;
             graphView = gView;
             title = node.name;
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(baseNodeStylePath);
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(SrcDefine.baseNodeStylePath);
             styleSheets.Add(styleSheet);
             controlsContainer = new VisualElement { name = "controls" };
             controlsContainer.AddToClassList("NodeControls");

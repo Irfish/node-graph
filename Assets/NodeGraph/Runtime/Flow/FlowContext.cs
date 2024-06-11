@@ -6,7 +6,7 @@ namespace NodeGraph
     {
         private readonly BaseFlow m_flow;
         private readonly List<BaseNode> m_activeNodes = new();
-        private readonly Dictionary<int, byte> m_nodeCheck = new();
+        private readonly HashSet<int> m_nodeCheck = new();
         
         public BaseFlow flow => m_flow;
 
@@ -19,7 +19,7 @@ namespace NodeGraph
         
         public void TryAddNode(BaseNode node)
         {
-            if (m_nodeCheck.TryAdd(node.id, 1))
+            if (m_nodeCheck.Add(node.id))
             {
                 m_activeNodes.Add(node);
             }
