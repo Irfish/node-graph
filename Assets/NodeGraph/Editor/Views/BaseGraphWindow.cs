@@ -56,6 +56,13 @@ namespace NodeGraph.Editor
         }
 
         protected abstract void InitWindow(IGraphSerializer graphSerializer);
+        
+        public static void OpenWithGraph<T>(IGraphSerializer graphSerializer) where T : BaseGraphWindow
+        {
+            var graphWindow = CreateWindow<T>();
+            graphWindow.InitGraph(graphSerializer);
+            graphWindow.Show();
+        }
     }
 
 }

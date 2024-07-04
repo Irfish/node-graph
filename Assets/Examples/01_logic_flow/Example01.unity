@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c565d34960a21648a22dbe22690dd02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mGraphScriptable: {fileID: 0}
+  mGraphScriptable: {fileID: 11400000, guid: 1a8dba934c893114c99d057a2b43344c, type: 2}
 --- !u!4 &1067774521
 Transform:
   m_ObjectHideFlags: 0

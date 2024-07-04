@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Example01.Editor
 {
     [CustomEditor(typeof(TestFlow))]
-    public class TestFlowInspector : UnityEditor.Editor
+    public class TestFlowInspector: UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -19,12 +19,12 @@ namespace Example01.Editor
                     testFlow.StartFlow();
                 }
 
-                if (GUILayout.Button("open graph"))
+                if (GUILayout.Button("open graph window"))
                 {
                     var graph = testFlow.mGraphScriptable;
                     if (graph != null)
                     {
-                        DefaultGraphWindow.OpenWithGraph(graph);
+                        BaseGraphWindow.OpenWithGraph<LogicFlowGraphWindow>(graph);
                     }
                     else
                     {
@@ -37,5 +37,6 @@ namespace Example01.Editor
             DrawDefaultInspector();
             serializedObject.ApplyModifiedProperties();
         }
+        
     }
 }

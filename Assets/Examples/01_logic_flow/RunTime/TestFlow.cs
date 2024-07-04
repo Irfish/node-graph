@@ -7,7 +7,10 @@ namespace Example01
     public class TestFlow : MonoBehaviour
     {
         private BaseFlow m_flow;
-        [FormerlySerializedAs("mGraphSerializerScriptable")] [FormerlySerializedAs("mNodeGraphScriptable")] [FormerlySerializedAs("m_graph")] public GraphScriptable mGraphScriptable;
+        [FormerlySerializedAs("mGraphSerializerScriptable")] 
+        [FormerlySerializedAs("mNodeGraphScriptable")] 
+        [FormerlySerializedAs("m_graph")] 
+        public GraphScriptable mGraphScriptable;
         
         private void LoadGraph()
         {

@@ -23,14 +23,8 @@ namespace NodeGraph.Editor
             var graph = ScriptableObject.CreateInstance<GraphScriptable>();
             graph.hideFlags = HideFlags.HideAndDontSave;
             graph.name = "logic_graph_new";
-            OpenWithGraph(graph);
+            OpenWithGraph<DefaultGraphWindow>(graph);
         }
 
-        public static void OpenWithGraph(IGraphSerializer graphSerializer)
-        {
-            var graphWindow = CreateWindow<DefaultGraphWindow>();
-            graphWindow.InitGraph(graphSerializer);
-            graphWindow.Show();
-        }
     }
 }

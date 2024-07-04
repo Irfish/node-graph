@@ -2,10 +2,10 @@ using NodeGraph.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace NodeGraph.Editor
+namespace Example01.Editor
 {
-    [CustomEditor(typeof(GraphComponent))] 
-    public class GraphComponentInspector : UnityEditor.Editor
+    [CustomEditor(typeof(LogicFlowGraphComponent))] 
+    public class LogicFlowGraphComponentInspector : GraphComponentInspector
     {
         public override void OnInspectorGUI()
         {
@@ -18,15 +18,15 @@ namespace NodeGraph.Editor
 
         private void DrawOpenGraphWindow()
         {
-            var graph = serializedObject.targetObject as GraphComponent;
+            var graph = serializedObject.targetObject as LogicFlowGraphComponent;
             if (graph != null)
             {
                 if (GUILayout.Button("open graph"))
                 {
-                    BaseGraphWindow.OpenWithGraph<DefaultGraphWindow>(graph);
+                    BaseGraphWindow.OpenWithGraph<LogicFlowGraphWindow>(graph);
                 }
             }
-        }
+        }  
     }
+    
 }
-
