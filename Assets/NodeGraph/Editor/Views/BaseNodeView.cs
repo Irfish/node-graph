@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GraphNode = UnityEditor.Experimental.GraphView.Node;
@@ -16,7 +17,8 @@ namespace NodeGraph.Editor
         protected VisualElement controlsContainer;
         protected readonly Dictionary<string, GraphPort> m_inputPorts = new();
         protected readonly Dictionary<string, GraphPort> m_outputPorts = new();
-
+        private float tickTime;
+        
         protected virtual void Init(BaseGraphView gView, T node)
         {
             target = node;
@@ -38,6 +40,8 @@ namespace NodeGraph.Editor
 
         private void OnNodeInit()
         {
+            tickTime = 0;
+            
             SetNodeHeadColor(Color.gray);
 
             if (graphView.editorModel)
@@ -48,7 +52,7 @@ namespace NodeGraph.Editor
 
         private void OnNodeActive()
         {
-            SetNodeHeadColor(Color.cyan);
+            SetNodeHeadColor(Color.green);
             SetPortsEnabled(false);
         }
 
@@ -79,18 +83,25 @@ namespace NodeGraph.Editor
 
         private void OnNodeFinished()
         {
-            SetNodeHeadColor(Color.yellow);
+            SetNodeHeadColor(Color.red);
         }
 
+        private void TickActivedColor()
+        {
+            var change = (tickTime - (int)tickTime) <= 0.5f;
+            SetNodeHeadColor(Color.green*(change?1:0.5f));
+        }
+        
         private void OnNodeTick(float dt)
         {
+            tickTime += dt;
+            TickActivedColor();
         }
 
         protected virtual void SetNodeHeadColor(Color color)
         {
-            color.a = 0.5f;
             titleContainer.style.borderTopColor = new StyleColor(color);
-            titleContainer.style.borderTopWidth = new StyleFloat(color.a > 0 ? 2f : 0f);
+            titleContainer.style.borderTopWidth = new StyleFloat(4f);
         }
 
         public override void SetPosition(Rect newPos)
@@ -155,12 +166,12 @@ namespace NodeGraph.Editor
             SetPortsEnabled(!node.isActive);
             if (node.isActive)
             {
-                SetNodeHeadColor(Color.cyan);
+                SetNodeHeadColor(Color.green);
             }
 
             if (node.isDone)
             {
-                SetNodeHeadColor(Color.yellow);
+                SetNodeHeadColor(Color.red);
             }
         }
 
@@ -218,5 +229,35 @@ namespace NodeGraph.Editor
         }
 
         protected abstract void OnInit();
+        
+        protected IntegerField DrawIntegerField(string text,int value,EventCallback<ChangeEvent<int>> valueChangedCallback)
+        {
+            var field = new IntegerField(text);
+            field.labelElement.style.minWidth = 50;
+            field.value = value;    
+            field.RegisterValueChangedCallback(valueChangedCallback);
+            controlsContainer.Add(field);
+            return field;
+        }
+        
+        protected FloatField DrawFloatField(string text,float value,EventCallback<ChangeEvent<float>> valueChangedCallback)
+        {
+            var field = new FloatField(text);
+            field.labelElement.style.minWidth = 50;
+            field.value = value;    
+            field.RegisterValueChangedCallback(valueChangedCallback);
+            controlsContainer.Add(field);
+            return field;
+        }
+        
+        protected Toggle DrawToggle(string text,bool value,EventCallback<ChangeEvent<bool>> valueChangedCallback)
+        {
+            var field = new Toggle(text);
+            field.labelElement.style.minWidth = 50;
+            field.value = value;    
+            field.RegisterValueChangedCallback(valueChangedCallback);
+            controlsContainer.Add(field);
+            return field;
+        }
     }
 }

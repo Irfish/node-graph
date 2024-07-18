@@ -11,11 +11,7 @@ namespace Example01.Editor
         
         protected override void OnInit()
         {
-            var inputField = new FloatField("时间");
-            inputField.labelElement.style.minWidth = 50;
-            inputField.value = node.delay;    
-            inputField.RegisterValueChangedCallback(OnValueChangedEvent);
-            controlsContainer.Add(inputField);
+            DrawFloatField("时间", node.delay, OnValueChangedEvent);
         }
 
         private void OnValueChangedEvent(ChangeEvent<float> e)
