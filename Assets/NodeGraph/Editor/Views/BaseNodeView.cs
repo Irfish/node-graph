@@ -12,6 +12,12 @@ namespace NodeGraph.Editor
 {
     public class NodeView<V, T> : GraphNode where T : BaseNode where V : NodeView<V, T>
     {
+        protected static readonly Color node_color_normal = Color.gray;
+        protected static readonly Color node_color_active = Color.green;
+        protected static readonly Color node_color_finished = Color.red;
+        protected static readonly Color port_color_in = Color.cyan*0.5f;
+        protected static readonly Color port_color_out = Color.yellow*0.5f;
+        protected static readonly Color port_color_finished = Color.red;
         public T target;
         private BaseGraphView graphView;
         protected VisualElement controlsContainer;
@@ -24,6 +30,7 @@ namespace NodeGraph.Editor
             target = node;
             graphView = gView;
             title = node.name;
+            tickTime = 0;
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(SrcDefine.baseNodeStylePath);
             styleSheets.Add(styleSheet);
             controlsContainer = new VisualElement { name = "controls" };
@@ -34,15 +41,17 @@ namespace NodeGraph.Editor
             node.onNodeActive = OnNodeActive;
             node.onNodeFinished = OnNodeFinished;
             node.onNodeTick = OnNodeTick;
+            node.onImpulseInPort = OnImpulseInPort;
+            node.onImpulseOutPort = OnImpulseOutPort;
 
-            SetNodeHeadColor(Color.gray);
+            SetNodeHeadColor(node_color_normal);
         }
 
         private void OnNodeInit()
         {
             tickTime = 0;
             
-            SetNodeHeadColor(Color.gray);
+            SetNodeHeadColor(node_color_normal);
 
             if (graphView.editorModel)
             {
@@ -52,7 +61,7 @@ namespace NodeGraph.Editor
 
         private void OnNodeActive()
         {
-            SetNodeHeadColor(Color.green);
+            SetNodeHeadColor(node_color_active);
             SetPortsEnabled(false);
         }
 
@@ -83,13 +92,37 @@ namespace NodeGraph.Editor
 
         private void OnNodeFinished()
         {
-            SetNodeHeadColor(Color.red);
+            SetNodeHeadColor(node_color_finished);
+            foreach (var port in m_inputPorts)
+            {
+                port.Value.portColor = port_color_finished;
+            }  
+            foreach (var port in m_outputPorts)
+            {
+                port.Value.portColor =  port_color_finished;
+            }  
         }
 
         private void TickActivedColor()
         {
             var change = (tickTime - (int)tickTime) <= 0.5f;
-            SetNodeHeadColor(Color.green*(change?1:0.5f));
+            SetNodeHeadColor(node_color_active*(change?1:0.5f));
+        }
+        
+        private void OnImpulseInPort(string portName)
+        {
+            if (m_inputPorts.TryGetValue(portName, out var port))
+            {
+                port.portColor = port_color_finished;
+            }
+        }
+        
+        private void OnImpulseOutPort(string portName)
+        {
+            if (m_outputPorts.TryGetValue(portName, out var port))
+            {
+                port.portColor = port_color_finished;
+            }
         }
         
         private void OnNodeTick(float dt)
@@ -166,12 +199,12 @@ namespace NodeGraph.Editor
             SetPortsEnabled(!node.isActive);
             if (node.isActive)
             {
-                SetNodeHeadColor(Color.green);
+                SetNodeHeadColor(node_color_active);
             }
 
             if (node.isDone)
             {
-                SetNodeHeadColor(Color.red);
+                SetNodeHeadColor(node_color_finished);
             }
         }
 
@@ -180,13 +213,23 @@ namespace NodeGraph.Editor
             var inputPortIds = target.inputPortIds;
             for (int i = 0; i < inputPortIds.Count; i++)
             {
-                AddPort(Direction.Input, inputPortIds[i]);
+                var port = inputPortIds[i];
+                AddPort(Direction.Input, port);
+                if (target.m_inPortImpulsed.Contains(port.name))
+                {
+                    m_inputPorts[port.name].portColor = port_color_finished;
+                }
             }
 
             var outputPortIds = target.outputPortIds;
             for (int i = 0; i < outputPortIds.Count; i++)
             {
-                AddPort(Direction.Output, outputPortIds[i]);
+                var port = outputPortIds[i];
+                AddPort(Direction.Output, port);
+                if (target.m_outPortImpulsed.Contains(port.name))
+                {
+                    m_outputPorts[port.name].portColor = port_color_finished;
+                }
             }
         }
 
@@ -199,14 +242,14 @@ namespace NodeGraph.Editor
                 case Direction.Input:
                     var inPort = InstantiatePort(vertical, type, capacity, typeof(bool));
                     inPort.portName = data.name;
-                    inPort.portColor = Color.green;
+                    inPort.portColor = port_color_in;
                     inputContainer.Add(inPort);
                     m_inputPorts[data.name] = inPort;
                     break;
                 case Direction.Output:
                     var outPort = InstantiatePort(vertical, type, capacity, typeof(bool));
                     outPort.portName = data.name;
-                    outPort.portColor = Color.magenta;
+                    outPort.portColor = port_color_out;
                     outputContainer.Add(outPort);
                     m_outputPorts[data.name] = outPort;
                     break;
@@ -258,6 +301,16 @@ namespace NodeGraph.Editor
             field.RegisterValueChangedCallback(valueChangedCallback);
             controlsContainer.Add(field);
             return field;
+        }
+        
+        protected Button DrawButton(string text,Action action)
+        {
+            var btn = new Button(action)
+            {
+                text = text
+            };
+            controlsContainer.Add(btn);
+            return btn;
         }
     }
 }

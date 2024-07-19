@@ -17,6 +17,10 @@ namespace NodeGraph
         [NonSerialized] public string customName = string.Empty;
         private bool m_active;
         private bool m_done;
+#if UNITY_EDITOR
+        public readonly HashSet<string> m_inPortImpulsed = new();
+        public readonly HashSet<string> m_outPortImpulsed = new();
+#endif
 
         public virtual List<PortData> inputPortIds => new() { new PortData(INPUT_PORT) };
 
@@ -51,6 +55,10 @@ namespace NodeGraph
             m_done = false;
             m_active = false;
             InitPorts();
+#if UNITY_EDITOR
+            m_inPortImpulsed.Clear();
+            m_outPortImpulsed.Clear();
+#endif
         }
 
         private void InitPorts()
@@ -139,6 +147,8 @@ namespace NodeGraph
             OnInit();
 #if UNITY_EDITOR
             onNodeInit?.Invoke();
+            m_inPortImpulsed.Clear();
+            m_outPortImpulsed.Clear();
 #endif
         }
 
@@ -147,6 +157,16 @@ namespace NodeGraph
             m_done = true;
             OnFinished();
 #if UNITY_EDITOR
+            m_inPortImpulsed.Clear();
+            m_outPortImpulsed.Clear();
+            foreach (var port in inputPorts)
+            {
+                m_inPortImpulsed.Add(port.portName);
+            }
+            foreach (var port in outputPorts)
+            {
+                m_outPortImpulsed.Add(port.portName);
+            }
             onNodeFinished?.Invoke();
 #endif
         }
@@ -197,6 +217,10 @@ namespace NodeGraph
             {
                 if (!isDone)
                 {
+#if UNITY_EDITOR
+                    m_inPortImpulsed.Add(portName);
+                    onImpulseInPort?.Invoke(portName);
+#endif  
                     OnImpulseInPort(portName, ctx);
                 }
             }
@@ -215,6 +239,10 @@ namespace NodeGraph
         {
             try
             {
+#if UNITY_EDITOR
+                m_outPortImpulsed.Add(portName);
+                onImpulseOutPort?.Invoke(portName);
+#endif
                 var outPort = GetPort(NodePortType.Output, portName);
                 if (outPort != null)
                 {
@@ -256,6 +284,8 @@ namespace NodeGraph
         public Action onNodeActive;
         public Action onNodeFinished;
         public Action<float> onNodeTick;
+        public Action<string> onImpulseInPort;
+        public Action<string> onImpulseOutPort;
 #endif
     }
 }
