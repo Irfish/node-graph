@@ -21,7 +21,7 @@ namespace NodeGraph
         public readonly HashSet<string> m_inPortImpulsed = new();
         public readonly HashSet<string> m_outPortImpulsed = new();
 #endif
-
+        
         public virtual List<PortData> inputPortIds => new() { new PortData(INPUT_PORT) };
 
         public virtual List<PortData> outputPortIds => new() { new PortData(OUTPUT_PORT) };
@@ -152,21 +152,11 @@ namespace NodeGraph
 #endif
         }
 
-        public void MarkDone()
+        private void MarkDone()
         {
             m_done = true;
             OnFinished();
 #if UNITY_EDITOR
-            m_inPortImpulsed.Clear();
-            m_outPortImpulsed.Clear();
-            foreach (var port in inputPorts)
-            {
-                m_inPortImpulsed.Add(port.portName);
-            }
-            foreach (var port in outputPorts)
-            {
-                m_outPortImpulsed.Add(port.portName);
-            }
             onNodeFinished?.Invoke();
 #endif
         }
@@ -220,7 +210,7 @@ namespace NodeGraph
 #if UNITY_EDITOR
                     m_inPortImpulsed.Add(portName);
                     onImpulseInPort?.Invoke(portName);
-#endif  
+#endif                    
                     OnImpulseInPort(portName, ctx);
                 }
             }

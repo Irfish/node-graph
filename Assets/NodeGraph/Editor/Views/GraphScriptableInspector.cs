@@ -4,24 +4,31 @@ using UnityEngine;
 namespace NodeGraph.Editor
 {
     [CustomEditor( typeof( GraphScriptable ) )]
-    public class GraphScriptableInspector:UnityEditor.Editor
+    public class GraphScriptableInspector : UnityEditor.Editor
     {
         public override void OnInspectorGUI() {
             serializedObject.Update();
 
-            DrawOpenGraphWindow();
+            if ( GUILayout.Button( "open graph" ) )
+            {
+                OpenGraph(serializedObject.targetObject as GraphScriptable);
+            }
             
-            GUILayout.Space( EditorGUIUtility.singleLineHeight );
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
+            DrawInspectorGUI();
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
             DrawDefaultInspector();
             serializedObject.ApplyModifiedProperties();
         }
-        
-        private void DrawOpenGraphWindow()
+
+        protected virtual void DrawInspectorGUI()
         {
-            if ( GUILayout.Button( "open graph" ) ) {
-                var t = serializedObject.targetObject as GraphScriptable;
-                BaseGraphWindow.OpenWithGraph<DefaultGraphWindow>( t );
-            }
+            
+        }
+        
+        protected virtual void OpenGraph(GraphScriptable graph)
+        {
+            DefaultGraphWindow.OpenWithGraph(graph);
         }
     } 
 }

@@ -7,22 +7,24 @@ namespace NodeGraph.Editor
 {
     public static class FileUtils
     {
-        private const string DEFAULT_PATH = "Assets";
+        private const string DEFAULT_PATH = "Assets/Resources/Graph";
+        private const string ASSETS_DEFAULT_PATH = "Assets";
 
-        public static string SelectFilePath(string fileName)
+        private static string SelectFilePath(string fileName)
         {
             var path = "";
-            var fullPath = EditorUtility.SaveFilePanel("保存", DEFAULT_PATH, fileName, "asset");
+            var fullPath = EditorUtility.SaveFilePanel("保存", ASSETS_DEFAULT_PATH, fileName, "asset");
             if (!string.IsNullOrEmpty(fullPath))
             {
-                var index = fullPath.IndexOf(DEFAULT_PATH, StringComparison.Ordinal);
+                var index = fullPath.IndexOf(ASSETS_DEFAULT_PATH, StringComparison.Ordinal);
                 if (index != -1)
                 {
-                    path = fullPath.Substring(index);
-                    return path;
+                    path = fullPath.Substring(index);    
                 }
-
-                return fullPath;
+                else
+                {
+                    return fullPath;
+                }
             }
 
             return path;

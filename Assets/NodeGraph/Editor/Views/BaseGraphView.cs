@@ -85,7 +85,7 @@ namespace NodeGraph.Editor
         private void SetBackGroud()
         {
             Insert(0, new GridBackground());
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(SrcDefine.graphBackGroundPath);
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( SrcDefine.graphBackGroundPath);
             styleSheets.Add(styleSheet);
         }
 

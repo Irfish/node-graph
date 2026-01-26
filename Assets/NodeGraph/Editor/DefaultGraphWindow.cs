@@ -7,7 +7,7 @@ namespace NodeGraph.Editor
     {
         protected override void InitWindow(IGraphSerializer g)
         {
-            titleContent = new GUIContent("Default Graph");
+            titleContent = new GUIContent(g.graphName);
             if (graphView == null)
             {
                 graphView = new BaseGraphView(this);
@@ -23,8 +23,14 @@ namespace NodeGraph.Editor
             var graph = ScriptableObject.CreateInstance<GraphScriptable>();
             graph.hideFlags = HideFlags.HideAndDontSave;
             graph.name = "logic_graph_new";
-            OpenWithGraph<DefaultGraphWindow>(graph);
+            OpenWithGraph(graph);
         }
 
+        public static void OpenWithGraph(IGraphSerializer graphSerializer)
+        {
+            var graphWindow = CreateWindow<DefaultGraphWindow>();
+            graphWindow.InitGraph(graphSerializer);
+            graphWindow.Show();
+        }
     }
 }

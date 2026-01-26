@@ -12,14 +12,15 @@ namespace NodeGraph.Editor
 {
     public class NodeView<V, T> : GraphNode where T : BaseNode where V : NodeView<V, T>
     {
-        protected static readonly Color node_color_normal = Color.gray;
+        public static readonly Color node_color_normal = Color.gray;
         protected static readonly Color node_color_active = Color.green;
         protected static readonly Color node_color_finished = Color.red;
         protected static readonly Color port_color_in = Color.cyan*0.5f;
         protected static readonly Color port_color_out = Color.yellow*0.5f;
         protected static readonly Color port_color_finished = Color.red;
+        
         public T target;
-        private BaseGraphView graphView;
+        protected BaseGraphView graphView;
         protected VisualElement controlsContainer;
         protected readonly Dictionary<string, GraphPort> m_inputPorts = new();
         protected readonly Dictionary<string, GraphPort> m_outputPorts = new();
@@ -52,7 +53,16 @@ namespace NodeGraph.Editor
             tickTime = 0;
             
             SetNodeHeadColor(node_color_normal);
-
+            
+            foreach (var port in m_inputPorts)
+            {
+                port.Value.portColor = port_color_in;
+            }  
+            foreach (var port in m_outputPorts)
+            {
+                port.Value.portColor =  port_color_out;
+            }
+            
             if (graphView.editorModel)
             {
                 SetPortsEnabled(true);
@@ -87,11 +97,17 @@ namespace NodeGraph.Editor
                 port.Value.SetEnabled(enabled);
             }
 
-            this.SetEnabled(enabled);
+            //this.SetEnabled(enabled);
         }
 
         private void OnNodeFinished()
         {
+            if (!target.isActive)
+            {
+                SetNodeHeadColor(node_color_normal);
+                return;
+            }
+            
             SetNodeHeadColor(node_color_finished);
             foreach (var port in m_inputPorts)
             {
@@ -109,6 +125,12 @@ namespace NodeGraph.Editor
             SetNodeHeadColor(node_color_active*(change?1:0.5f));
         }
         
+        protected virtual void OnNodeTick(float dt)
+        {
+            tickTime += dt;
+            TickActivedColor();
+        }
+
         private void OnImpulseInPort(string portName)
         {
             if (m_inputPorts.TryGetValue(portName, out var port))
@@ -125,16 +147,10 @@ namespace NodeGraph.Editor
             }
         }
         
-        private void OnNodeTick(float dt)
-        {
-            tickTime += dt;
-            TickActivedColor();
-        }
-
         protected virtual void SetNodeHeadColor(Color color)
         {
             titleContainer.style.borderTopColor = new StyleColor(color);
-            titleContainer.style.borderTopWidth = new StyleFloat(4f);
+            titleContainer.style.borderTopWidth = new StyleFloat(4);
         }
 
         public override void SetPosition(Rect newPos)
@@ -183,7 +199,7 @@ namespace NodeGraph.Editor
                 view.Init(graphView, node);
                 return view;
             }
-
+            
             return null;
         }
     }
@@ -199,12 +215,18 @@ namespace NodeGraph.Editor
             SetPortsEnabled(!node.isActive);
             if (node.isActive)
             {
-                SetNodeHeadColor(node_color_active);
+                if (node.isDone)
+                {
+                    SetNodeHeadColor(node_color_finished);
+                }
+                else
+                {
+                    SetNodeHeadColor(node_color_active);    
+                }
             }
-
-            if (node.isDone)
+            else
             {
-                SetNodeHeadColor(node_color_finished);
+                SetNodeHeadColor(node_color_normal);
             }
         }
 
@@ -272,6 +294,17 @@ namespace NodeGraph.Editor
         }
 
         protected abstract void OnInit();
+
+        
+        protected TextField DrawTextField(string text,string value,EventCallback<ChangeEvent<string>> valueChangedCallback)
+        {
+            var field = new TextField(text);
+            field.labelElement.style.minWidth = 50;
+            field.value = value;    
+            field.RegisterValueChangedCallback(valueChangedCallback);
+            controlsContainer.Add(field);
+            return field;
+        }
         
         protected IntegerField DrawIntegerField(string text,int value,EventCallback<ChangeEvent<int>> valueChangedCallback)
         {
@@ -311,6 +344,13 @@ namespace NodeGraph.Editor
             };
             controlsContainer.Add(btn);
             return btn;
+        }
+        
+        protected Label DrawLable(string text)
+        {
+            var lab = new Label(text);
+            controlsContainer.Add(lab);
+            return lab;
         }
     }
 }

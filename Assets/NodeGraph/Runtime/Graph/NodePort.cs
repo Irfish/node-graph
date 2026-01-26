@@ -45,7 +45,10 @@ namespace NodeGraph
 
         public void Delink(NodePort port)
         {
-            connections.Remove(port);
+            if (connections.Contains(port))
+            {
+                connections.Remove(port);
+            }
         }
 
         public void Impulse(FlowContext ctx)

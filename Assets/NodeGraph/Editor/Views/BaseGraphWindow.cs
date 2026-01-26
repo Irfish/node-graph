@@ -7,6 +7,7 @@ namespace NodeGraph.Editor
 {
     public abstract class BaseGraphWindow : EditorWindow
     {
+       
         protected VisualElement rootView;
         protected BaseGraphView graphView;
         protected IGraphSerializer GraphSerializer;
@@ -56,13 +57,6 @@ namespace NodeGraph.Editor
         }
 
         protected abstract void InitWindow(IGraphSerializer graphSerializer);
-        
-        public static void OpenWithGraph<T>(IGraphSerializer graphSerializer) where T : BaseGraphWindow
-        {
-            var graphWindow = CreateWindow<T>();
-            graphWindow.InitGraph(graphSerializer);
-            graphWindow.Show();
-        }
     }
 
 }
